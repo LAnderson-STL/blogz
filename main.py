@@ -14,9 +14,12 @@ def index():
         blog_content = request.form['blog-content']
         blogs.append((blog_title, blog_content))
 
+    
     return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
+    
 
 @app.route('/', methods=['POST', 'GET'])
 def show_blog_posts():
     return render_template('blog.html', title="Show blog Posts", blogs=blogs )
+
 app.run()
