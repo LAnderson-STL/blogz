@@ -6,7 +6,6 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:Shooter1$@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
-
 db = SQLAlchemy(app)
 
 class Blog(db.Model):
@@ -21,15 +20,17 @@ class Blog(db.Model):
 
 
 
-blogs = [] 
-
 @app.route('/newpost', methods=['POST', 'GET'])
 def index():
 
     if request.method == 'POST':
         blog_title = request.form['blog-title']
-        blog_content = request.form['blog-content']
-        blogs.append((blog_title, blog_content))
+        blog_body = request.form['blog-body']
+        new_blog = Blog(blog_title, blog_body)
+        db.session.add(new_blog)
+        db.session.commit()
+
+    blogs = Blog.query.all()
 
     
     return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
@@ -37,6 +38,7 @@ def index():
 
 @app.route('/', methods=['POST', 'GET'])
 def show_blog_posts():
+    blogs = Blog.query.all()
     return render_template('blog.html', title="Show blog Posts", blogs=blogs )
 
 if __name__ == '__main__':

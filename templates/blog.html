@@ -8,8 +8,8 @@
 
         <ul>
             {% for blog in blogs %}
-            <li>{{blog[0]}}
-                <p>{{blog[1]}}</p>
+            <li>{{blog.title}}
+                <p>{{blog.body}}</p>
 
             </li>
             {% endfor %}
