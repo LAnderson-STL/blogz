@@ -13,10 +13,12 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120)) 
     body = db.Column(db.String(500))
+    deleted = db.Column(db.Boolean, default=False)
 
     def __init__(self, title, body):
         self.title = title
         self.body = body
+        self.completed = False
 
 
 
@@ -31,8 +33,10 @@ def index():
         db.session.commit()
 
     blogs = Blog.query.all()
-
     
+
+    #this should redirect to ?!!!
+    #return redirect('/')
     return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
     
 
@@ -40,6 +44,15 @@ def index():
 def show_blog_posts():
     blogs = Blog.query.all()
     return render_template('blog.html', title="Show blog Posts", blogs=blogs )
+
+#delete blog posts
+@app.route('/delete-post', methods=['POST'])
+def delete_post():
+    blog_id = int(request.form['blog-id'])
+    blog = Blog.query.get(blog_id)
+    db.session.delete(blog)
+    db.session.commit()
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run()
