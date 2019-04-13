@@ -33,22 +33,45 @@ def index():
 @app.route('/newpost', methods=['POST', 'GET'])
 def add_new_post():
 
+    title_error = ''
+    body_error = ''
+
     if request.method == 'POST':
         blog_title = request.form['blog-title']
         blog_body = request.form['blog-body']
         new_blog = Blog(blog_title, blog_body)
         
-
-    
-        db.session.add(new_blog)
-        db.session.commit()
+        
+        if not_empty(blog_title) and not_empty(blog_body):    
+            db.session.add(new_blog)
+            db.session.commit()
        
             
+            blogs = Blog.query.all()
+    
+            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
+
+        ####
+        elif not not_empty(blog_title) and not not_empty(blog_body):
+            title_error = 'Please enter a title.'
+            body_error = 'Please enter content.'
+            blogs = Blog.query.all()
+            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+
+        elif not not_empty(blog_title):
+            title_error = 'Please enter a title.'
+            blogs = Blog.query.all()
+            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+
+        elif not not_empty(blog_body):
+            body_error = 'Please enter content.'
+            blogs = Blog.query.all()
+            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+    
+     
     blogs = Blog.query.all()
     
-    return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
-
-    
+    return render_template('newpost.html', title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)   
     
     
 #delete blog posts
@@ -60,6 +83,8 @@ def delete_post():
     db.session.commit()
 
     return redirect('/')
+
+
 
 if __name__ == '__main__':
     app.run()
