@@ -6,21 +6,26 @@
     <p>No posts yet</p>
     {% else %}
 
-        <ul>
+        
             {% for blog in blogs %}
-            <li>{{blog.title}}
+            <a href="/?id={{blog.id}}"><h2 >{{blog.title}}</h2></a>
+            <p>{{blog.body}}</p>  
                 <form method='POST' action='/delete-post' style="display:inline-block">
                     
                     <!--Delete posts-->
                     <input type='hidden' name="blog-id" value = {{blog.id}} />
                     <input type="submit" value='Delete Post' />
 
-                </form>    
-                <p>{{blog.body}}</p>
+                </form>  
+                <br />
+                <br />
+                <hr/>  
+                  
+                
 
-            </li>
+            
             {% endfor %}
-        </ul>
+        
 
     {% endif %}
 {% endblock %}

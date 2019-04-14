@@ -26,7 +26,7 @@ def not_empty(input):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     blogs = Blog.query.all()
-    return render_template('blog.html', title="Show blog Posts", blogs=blogs )
+    return render_template('blog.html', title="Show blog Posts", blogs=blogs)
 
 
 #display form to add new posts
@@ -45,13 +45,17 @@ def add_new_post():
         if not_empty(blog_title) and not_empty(blog_body):    
             db.session.add(new_blog)
             db.session.commit()
+            indiv_post_link = "./?id=" + str(new_blog.id)
        
             
             blogs = Blog.query.all()
-    
-            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
+            ######
+           #something wrong here
+            #return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
+            return redirect(indiv_post_link)
 
-        ####
+
+        
         elif not not_empty(blog_title) and not not_empty(blog_body):
             title_error = 'Please enter a title.'
             body_error = 'Please enter content.'
@@ -84,7 +88,10 @@ def delete_post():
 
     return redirect('/')
 
-
-
+@app.route('/indiv-post', methods=['GET'])
+def view_indiv_post():
+    indiv_post = request.args.get('id')
+    
+    return render_template('indivpost.html', title="Show Ind Blog Posts", indiv_post=indiv_post)
 if __name__ == '__main__':
     app.run()
