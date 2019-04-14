@@ -22,11 +22,28 @@ class Blog(db.Model):
 def not_empty(input):
     if input:
         return True
-        
-@app.route('/', methods=['POST', 'GET'])
+
+@app.route('/')
 def index():
+    return redirect('/blog')
+        
+@app.route('/blog', methods=['POST', 'GET'])
+def show_all_posts():
     blogs = Blog.query.all()
-    return render_template('blog.html', title="Show blog Posts", blogs=blogs)
+    blog_id = request.args.get('id')
+
+    if not_empty(blog_id):
+        indiv_post = Blog.query.get(blog_id)
+        blog_title = indiv_post.title
+        blog_body = indiv_post.body
+        return render_template('indivpost.html', title="Show Individual Post", blog_title=blog_title, blog_body = blog_body)
+
+    else:
+        blogs = Blog.query.all()
+        return render_template('blog.html', title="Show All Posts", blogs=blogs)
+        
+        
+
 
 
 #display form to add new posts
@@ -45,14 +62,8 @@ def add_new_post():
         if not_empty(blog_title) and not_empty(blog_body):    
             db.session.add(new_blog)
             db.session.commit()
-            indiv_post_link = "./?id=" + str(new_blog.id)
-       
-            
-            blogs = Blog.query.all()
-            ######
-           #something wrong here
-            #return render_template('newpost.html',title="Add Blog Entry", blogs=blogs)
-            return redirect(indiv_post_link)
+            blog_id = new_blog.id 
+            return redirect('/blog?id={0}'.format(blog_id))
 
 
         
@@ -77,7 +88,11 @@ def add_new_post():
     
     return render_template('newpost.html', title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)   
     
-    
+
+
+
+
+
 #delete blog posts
 @app.route('/delete-post', methods=['POST'])
 def delete_post():
@@ -86,12 +101,10 @@ def delete_post():
     db.session.delete(blog)
     db.session.commit()
 
-    return redirect('/')
+    return redirect('/blog')
 
-@app.route('/indiv-post', methods=['GET'])
-def view_indiv_post():
-    indiv_post = request.args.get('id')
-    
-    return render_template('indivpost.html', title="Show Ind Blog Posts", indiv_post=indiv_post)
+
+
+
 if __name__ == '__main__':
     app.run()
