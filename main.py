@@ -8,6 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:Shooter1$@
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
+#create Blog class 
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,18 +20,28 @@ class Blog(db.Model):
         self.title = title
         self.body = body
 
+#check for input
 def not_empty(input):
     if input:
         return True
 
+
+
+
+#redirect to main blog page
 @app.route('/')
 def index():
     return redirect('/blog')
-        
+
+
+
+
+#route to show all blogs on main page, and show indiv posts        
 @app.route('/blog', methods=['POST', 'GET'])
 def show_all_posts():
-    blogs = Blog.query.all()
     blog_id = request.args.get('id')
+    blogs = Blog.query.all()
+    #TODO: order by id desc 
 
     if not_empty(blog_id):
         indiv_post = Blog.query.get(blog_id)
@@ -45,14 +56,15 @@ def show_all_posts():
         
 
 
-
-#display form to add new posts
+#route to display form to add new posts
 @app.route('/newpost', methods=['POST', 'GET'])
 def add_new_post():
 
     title_error = ''
     body_error = ''
 
+    
+    #form validatation
     if request.method == 'POST':
         blog_title = request.form['blog-title']
         blog_body = request.form['blog-body']
@@ -64,8 +76,6 @@ def add_new_post():
             db.session.commit()
             blog_id = new_blog.id 
             return redirect('/blog?id={0}'.format(blog_id))
-
-
         
         elif not not_empty(blog_title) and not not_empty(blog_body):
             title_error = 'Please enter a title.'
@@ -93,7 +103,7 @@ def add_new_post():
 
 
 
-#delete blog posts
+#optional route to delete blog posts
 @app.route('/delete-post', methods=['POST'])
 def delete_post():
     blog_id = int(request.form['blog-id'])
