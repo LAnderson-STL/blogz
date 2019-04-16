@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:Shooter1$@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:Shooter1$@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
@@ -23,13 +23,17 @@ class Blog(db.Model):
 #create User class
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50)) 
+    username = db.Column(db.String(50), unique=True) 
     password = db.Column(db.String(50)) 
+
     #TODO blogs which signifies a relationship between the blog table and this user, 
     # thus binding this user with the blog posts they write.
     #blogs = not sure how to specify foreign key
     ########stopped @ 'Add User Class' last bullet pt#############
 
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
 #check for input
 def not_empty(input):
@@ -44,7 +48,43 @@ def not_empty(input):
 def index():
     return redirect('/blog')
 
+#route to login page
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username = username).first()
+        if user and user.password == password:
+            #TODO remember that user logged in
+            return redirect('/')
+        else:
+            #TODO explain why login failed
+            return '<h1>error</h1>'
 
+    return render_template('login.html')
+
+#route to signup page
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+
+        #TODO validation
+
+        existing_user = User.query.filter_by(username=username).first()
+        if not existing_user:
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect('/')
+            #TODO remember user
+        else:
+            #TODO - already exists message
+            return '<h1>Duplicate User</h1>'    
+    return render_template('signup.html')
 
 
 #route to show all blogs on main page, and show indiv posts        
