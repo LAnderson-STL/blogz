@@ -10,7 +10,6 @@ db = SQLAlchemy(app)
 
 #create Blog class 
 class Blog(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120)) 
     body = db.Column(db.String(500))
@@ -19,6 +18,18 @@ class Blog(db.Model):
     def __init__(self, title, body):
         self.title = title
         self.body = body
+
+
+#create User class
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50)) 
+    password = db.Column(db.String(50)) 
+    #TODO blogs which signifies a relationship between the blog table and this user, 
+    # thus binding this user with the blog posts they write.
+    #blogs = not sure how to specify foreign key
+    ########stopped @ 'Add User Class' last bullet pt#############
+
 
 #check for input
 def not_empty(input):
