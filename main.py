@@ -1,5 +1,5 @@
     
-from flask import Flask, request, redirect, render_template, session
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
@@ -75,10 +75,14 @@ def login():
             #session adds key to dict . 
             # remembers that user logged in access like dict
             session['username'] = username
+            #flash messages use session object to store message for 
+            #next time user comes back
+            flash('Logged in')
             return redirect('/')
         else:
-            #TODO explain why login failed
-            return '<h1>error</h1>'
+            #TODO - ver logic
+            flash('need to specify spec error', 'error')
+            
 
     return render_template('login.html')
 
