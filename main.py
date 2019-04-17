@@ -41,6 +41,9 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+    def __repr__(self):
+        return self.username
+
 #check for input
 def not_empty(input):
     if input:
@@ -52,7 +55,7 @@ def not_empty(input):
 #check for to see if they are logged in
 def require_login():
     #create list of pages OK to view without being logeed in.
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'blog', '/']
     #if there is not a username key in session dict (not logged in),
     # then redirect to login
     #enpoint is given path
@@ -65,8 +68,11 @@ def require_login():
 
 #redirect to main blog page
 @app.route('/')
-def go_to_root():
-    return redirect('/blog')
+def index():
+    users = User.query.all()
+    
+    
+    return render_template('index.html', title="Show All Users", users=users)
 
 #route to login page
 @app.route('/login', methods=['POST', 'GET'])
@@ -146,12 +152,13 @@ def add_new_post():
     title_error = ''
     body_error = ''
 
-    
+    owner = User.query.filter_by(username=session['username']).first()
+
     #form validatation
     if request.method == 'POST':
         blog_title = request.form['blog-title']
         blog_body = request.form['blog-body']
-        owner = User.query.filter_by(username=session['username']).first()
+        # moved above ---- owner = User.query.filter_by(username=session['username']).first()
         new_blog = Blog(blog_title, blog_body, owner)
         
         
@@ -160,31 +167,35 @@ def add_new_post():
             db.session.commit()
             blog_id = new_blog.id 
             return redirect('/blog?id={0}'.format(blog_id))
-        
+            
         elif not not_empty(blog_title) and not not_empty(blog_body):
             title_error = 'Please enter a title.'
             body_error = 'Please enter content.'
-            blogs = Blog.query.all()
-            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+            return render_template('newpost.html',title="Add Blog Entry", body_error=body_error, title_error=title_error)
 
         elif not not_empty(blog_title):
-            title_error = 'Please enter a title.'
-            blogs = Blog.query.all()
-            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+            title_error = 'Please enter a title.'   
+            return render_template('newpost.html',title="Add Blog Entry", body_error=body_error, title_error=title_error)
 
         elif not not_empty(blog_body):
             body_error = 'Please enter content.'
-            blogs = Blog.query.all()
-            return render_template('newpost.html',title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)
+                
+            return render_template('newpost.html',title="Add Blog Entry", body_error=body_error, title_error=title_error)
     
      
-    blogs = Blog.query.all()
+    #blogs = Blog.query.all()
+    #blogs = Blog.query.filter_by(owner=owner).all()
+
     
-    return render_template('newpost.html', title="Add Blog Entry", blogs=blogs, body_error=body_error, title_error=title_error)   
+    return render_template('newpost.html', title="Add Blog Entry", body_error=body_error, title_error=title_error)   
     
 
 
-
+@app.route('/myposts', methods=['POST', 'GET'])
+def show_my_posts():
+    owner = User.query.filter_by(username=session['username']).first()
+    blogs = Blog.query.filter_by(owner=owner).all()
+    return render_template('myposts.html', title="Show All Posts", blogs=blogs)
 
 
 #optional route to delete blog posts
@@ -197,6 +208,13 @@ def delete_post():
 
     return redirect('/blog')
 
+#needs work!!!!!!!!
+#route to all of a user's posts when username link is clicked
+@app.route('/userposts', methods=['POST', 'GET'])
+def show_user_posts():
+    owner = User.query.filter_by(username=session['username']).first()
+    blogs = Blog.query.filter_by(owner=owner).all()
+    return render_template('myposts.html', title="Show All Posts", blogs=blogs)
 
 
 

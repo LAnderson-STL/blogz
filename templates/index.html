@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-heading">Users</h1>
+</br>
+    
+    {% if users|length == 0 %}
+    <p>No users yet</p>
+    {% else %}
+
+        
+    {% for user in users %}
+        <a class="user-link" href="/user?id={{user.username}}"><h2 class="user-username">{{user.username}}</h2></a>
+           
+                
+                <br />
+                <br />
+                <hr/>  
+                  
+    {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
