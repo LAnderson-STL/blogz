@@ -1,5 +1,5 @@
     
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
@@ -7,6 +7,8 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:Shooter1$@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+#secretkey
+app.secret_key = 'wP3h#c08LK$chw'
 
 #create Blog class 
 class Blog(db.Model):
@@ -41,11 +43,25 @@ def not_empty(input):
         return True
 
 
+#we want this func to run for every request
+@app.before_request
+#check for to see if they are logged in
+def require_login():
+    #create list of pages OK to view without being logeed in.
+    allowed_routes = ['login', 'signup']
+    #if there is not a username key in session dict (not logged in),
+    # then redirect to login
+    #enpoint is given path
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
+
+
+
 
 
 #redirect to main blog page
 @app.route('/')
-def index():
+def go_to_root():
     return redirect('/blog')
 
 #route to login page
@@ -56,7 +72,9 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username = username).first()
         if user and user.password == password:
-            #TODO remember that user logged in
+            #session adds key to dict . 
+            # remembers that user logged in access like dict
+            session['username'] = username
             return redirect('/')
         else:
             #TODO explain why login failed
@@ -79,6 +97,7 @@ def signup():
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
+            session['username'] = username
             return redirect('/')
             #TODO remember user
         else:
@@ -86,6 +105,11 @@ def signup():
             return '<h1>Duplicate User</h1>'    
     return render_template('signup.html')
 
+#route to log out
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/')
 
 #route to show all blogs on main page, and show indiv posts        
 @app.route('/blog', methods=['POST', 'GET'])
