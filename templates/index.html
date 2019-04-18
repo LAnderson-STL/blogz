@@ -11,7 +11,7 @@
 
         
     {% for user in users %}
-        <a class="user-link" href="/user?id={{user.username}}"><h2 class="user-username">{{user.username}}</h2></a>
+        <a class="user-link" href="/?id={{user.id}}"><h2 class="user-username">{{user.username}}</h2></a>
            
                 
                 <br />
@@ -22,4 +22,5 @@
 
     {% endif %}
 
-{% endblock %}
+
+    {% endblock %}

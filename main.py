@@ -32,7 +32,7 @@ class User(db.Model):
     #spec relationship (not col)
     blogs = db.relationship('Blog', backref ='owner')
 
-    #TODO blogs which signifies a relationship between the blog table and this user, 
+    #blogs which signifies a relationship between the blog table and this user, 
     # thus binding this user with the blog posts they write.
     #blogs = not sure how to specify foreign key
     ########stopped @ 'Add User Class' last bullet pt#############
@@ -70,9 +70,21 @@ def require_login():
 @app.route('/')
 def index():
     users = User.query.all()
+    user_id = request.args.get('id')
+
+    ######fix so messed up!!!
+    if not_empty(user_id):
+        owner = User.query.get(user_id)
+        blogs = Blog.query.filter_by(owner=owner).all()
+        return render_template('userposts.html', title = 'View user posts', blogs=blogs)
+    #####
     
     
-    return render_template('index.html', title="Show All Users", users=users)
+    else:
+        return render_template('index.html', title="Show All Users", users=users)
+
+
+
 
 #route to login page
 @app.route('/login', methods=['POST', 'GET'])
@@ -113,7 +125,7 @@ def signup():
             db.session.commit()
             session['username'] = username
             return redirect('/')
-            #TODO remember user
+            
         else:
             #TODO - already exists message
             return '<h1>Duplicate User</h1>'    
