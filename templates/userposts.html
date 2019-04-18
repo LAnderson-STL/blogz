@@ -2,13 +2,23 @@
 
 {% block content %}
 
-    {{% for blog in blogs %}}
+<h1 class="page-heading">My posts</h1>
+</br>
     
-    <h2>{{blog.title}}</h2>
+    {% if blogs|length == 0 %}
+    <p>No posts yet</p>
+    {% else %}
 
-    <p class="body">{{blog.body}}</p>
+        
+    {% for blog in blogs %}
+        <a class="title-link" href="/blog?id={{blog.id}}"><h2 class="blog-title">{{blog.title}}</h2></a>
+            <p class="body">{{blog.body}}</p>  
+               
+                <br />
+                <hr/>  
+                  
+    {% endfor %}
 
-    {{% endfor %}}
+    {% endif %}
 
-     
 {% endblock %}

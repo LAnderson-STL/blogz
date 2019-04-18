@@ -72,12 +72,14 @@ def index():
     users = User.query.all()
     user_id = request.args.get('id')
 
-    ######fix so messed up!!!
+ #show all posts for user when username is clicked on   
     if not_empty(user_id):
         owner = User.query.get(user_id)
         blogs = Blog.query.filter_by(owner=owner).all()
         return render_template('userposts.html', title = 'View user posts', blogs=blogs)
-    #####
+     #TODO add username to page   
+    
+    
     
     
     else:
