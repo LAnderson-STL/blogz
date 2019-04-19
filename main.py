@@ -105,27 +105,23 @@ def login():
             flash('Logged in')
             return redirect('/')
         else:
-            
-            
+            ##### needs work
+            users = User.query.all()
             if not username and not password:
                 flash('Please enter your username and password', 'error')
-            elif username and user.username == username and password and user.password != password:
-                flash('Incorrect password', 'error')
-            
             elif not username:
                 flash('Please enter your username', 'error')
-            elif not password:
-                flash('Please enter your password', 'error')
-             
-            #elif username != User.query.filter_
-               # flash('Invalid username','error')
+            elif user and not password:
+                flash('Please enter password')
+            elif user and user.password != password:
+               flash('Incorrect password', 'error')
+            elif username not in users:
+                flash('Username does not exist')
+                return redirect('/signup')
             
-
-
-
-            #TODO - ver logic
-            #flash('Incorrect password, 'error')
-            ##########
+            
+             
+        
             
 
     return render_template('login.html')
@@ -242,8 +238,7 @@ def delete_post():
 
     return redirect('/blog')
 
-#needs work!!!!!!!!
-#route to all of a user's posts when username link is clicked
+
 @app.route('/userposts', methods=['POST', 'GET'])
 def show_user_posts():
     owner = User.query.filter_by(username=session['username']).first()
