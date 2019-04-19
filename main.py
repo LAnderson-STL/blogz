@@ -116,14 +116,8 @@ def login():
             elif user and user.password != password:
                flash('Incorrect password', 'error')
             elif username not in users:
-                flash('Username does not exist')
+                flash('Username does not exist', 'errpr')
                 return redirect('/signup')
-            
-            
-             
-        
-            
-
     return render_template('login.html')
 
 #route to signup page
@@ -133,20 +127,26 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
-
-        #TODO validation
-
         existing_user = User.query.filter_by(username=username).first()
-        if not existing_user:
+        
+
+        if not username and not password:
+            flash('Please choose a username and password', 'error')
+        elif len(username) < 3:
+            flash('Username must be longer than 3 characters', 'error')
+        elif not existing_user and len(password) <= 3:
+            flash('Password must be longer than 3 characters', 'error')
+        elif not existing_user and len(password) >3 and password != verify:
+            flash('Passwords do not match', 'error')
+        elif not existing_user and len(password) >3 and password ==verify:
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
-            return redirect('/')
-            
+            return redirect('/newpost')
         else:
-            #TODO - already exists message
-            return '<h1>Duplicate User</h1>'    
+            flash('Username already exists', 'error')
+            return  render_template('signup.html') 
     return render_template('signup.html')
 
 #route to log out
