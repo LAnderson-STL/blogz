@@ -1,6 +1,7 @@
     
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy 
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -13,8 +14,10 @@ app.secret_key = 'wP3h#c08LK$chw'
 #create Blog class 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120)) 
-    body = db.Column(db.String(500))
+    title = db.Column(db.String(120), nullable=False) 
+    body = db.Column(db.String(5000), nullable=False)
+    pub_date = db.Column(db.DateTime, nullable=False,
+        default=datetime.utcnow)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
 
@@ -55,7 +58,7 @@ def not_empty(input):
 #check for to see if they are logged in
 def require_login():
     #create list of pages OK to view without being logeed in.
-    allowed_routes = ['login', 'signup', 'index', 'blog']
+    allowed_routes = ['login', 'signup', 'index', 'show_all_posts']
     #if there is not a username key in session dict (not logged in),
     # then redirect to login
     #enpoint is given path
@@ -160,7 +163,7 @@ def logout():
 def show_all_posts():
     blog_id = request.args.get('id')
     blogs = Blog.query.all()
-    #TODO: order by id desc 
+    #TODO: order by date time desc
 
     if not_empty(blog_id):
         indiv_post = Blog.query.get(blog_id)
