@@ -34,8 +34,8 @@ class User(db.Model):
 
     #blogs which signifies a relationship between the blog table and this user, 
     # thus binding this user with the blog posts they write.
-    #blogs = not sure how to specify foreign key
-    ########stopped @ 'Add User Class' last bullet pt#############
+   
+
 
     def __init__(self, username, password):
         self.username = username
@@ -55,10 +55,11 @@ def not_empty(input):
 #check for to see if they are logged in
 def require_login():
     #create list of pages OK to view without being logeed in.
-    allowed_routes = ['login', 'signup', 'blog', '/']
+    allowed_routes = ['login', 'signup', 'index', 'blog']
     #if there is not a username key in session dict (not logged in),
     # then redirect to login
     #enpoint is given path
+    #square brackets ??
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -104,8 +105,27 @@ def login():
             flash('Logged in')
             return redirect('/')
         else:
+            
+            
+            if not username and not password:
+                flash('Please enter your username and password', 'error')
+            elif username and user.username == username and password and user.password != password:
+                flash('Incorrect password', 'error')
+            
+            elif not username:
+                flash('Please enter your username', 'error')
+            elif not password:
+                flash('Please enter your password', 'error')
+             
+            #elif username != User.query.filter_
+               # flash('Invalid username','error')
+            
+
+
+
             #TODO - ver logic
-            flash('need to specify spec error', 'error')
+            #flash('Incorrect password, 'error')
+            ##########
             
 
     return render_template('login.html')
@@ -137,7 +157,7 @@ def signup():
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/')
+    return redirect('/login')
 
 #route to show all blogs on main page, and show indiv posts        
 @app.route('/blog', methods=['POST', 'GET'])
