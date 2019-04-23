@@ -163,13 +163,18 @@ def logout():
 def show_all_posts():
     blog_id = request.args.get('id')
     blogs = Blog.query.all()
+
+    #####
+    owner = User.query.filter_by(username=session['username']).first()
+    ###
     #TODO: order by date time desc
 
     if not_empty(blog_id):
         indiv_post = Blog.query.get(blog_id)
         blog_title = indiv_post.title
         blog_body = indiv_post.body
-        return render_template('indivpost.html', title="Show Individual Post", blog_title=blog_title, blog_body = blog_body)
+        
+        return render_template('indivpost.html', title="Show Individual Post", blog_title=blog_title, blog_body = blog_body, owner=owner)
 
     else:
         blogs = Blog.query.all()
