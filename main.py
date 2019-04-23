@@ -165,7 +165,7 @@ def show_all_posts():
     blogs = Blog.query.all()
 
     #####
-    owner = User.query.filter_by(username=session['username']).first()
+    #owner = User.query.filter_by(username=session['username']).first()
     ###
     #TODO: order by date time desc
 
