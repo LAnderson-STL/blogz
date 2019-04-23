@@ -3,10 +3,14 @@
 
 {% block content %}
     
-    <h2>{{blog_title}}</h2>
-    <h4 class="username">Written by: <a class="user-link" href="/blog?owner_id={{owner}}">{{owner}}</a>  </h4>
 
-    <p class="body">{{blog_body}}</p>
-
+        <a class="title-link" href="/blog?id={{blog.id}}"><h2 class="blog-title">{{blog.title}}</h2></a>
+        <h4 class="username">Written by: <a class="user-link" href="/blog?owner_id={{blog.owner}}">{{blog.owner}}</a>  </h4>
+            <p class="body">{{blog.body}}</p>  
+                <br />
+                <br />
+                <hr/>  
+                  
+    
      
 {% endblock %}

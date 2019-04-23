@@ -80,11 +80,7 @@ def index():
     if not_empty(user_id):
         owner = User.query.get(user_id)
         blogs = Blog.query.filter_by(owner=owner).all()
-        return render_template('userposts.html', title = 'View user posts', blogs=blogs)
-     #TODO add username to page   
-    
-    
-    
+        return render_template('userposts.html', title ='View user posts', blogs=blogs)
     
     else:
         return render_template('index.html', title="Show All Users", users=users)
@@ -163,18 +159,19 @@ def logout():
 def show_all_posts():
     blog_id = request.args.get('id')
     blogs = Blog.query.all()
+    user_id = request.args.get('owner_id')
 
     #####
-    #owner = User.query.filter_by(username=session['username']).first()
+    if user_id:
+        blogs = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('userposts.html', title="User Posts", blogs=blogs)
     ###
     #TODO: order by date time desc
 
     if not_empty(blog_id):
-        indiv_post = Blog.query.get(blog_id)
-        blog_title = indiv_post.title
-        blog_body = indiv_post.body
-        
-        return render_template('indivpost.html', title="Show Individual Post", blog_title=blog_title, blog_body = blog_body, owner=owner)
+        blogs = Blog.query.filter_by(id=blog_id)
+    
+        return render_template('blog.html', title="Show Individual Post", blogs=blogs)
 
     else:
         blogs = Blog.query.all()
@@ -249,9 +246,14 @@ def delete_post():
 
 @app.route('/userposts', methods=['POST', 'GET'])
 def show_user_posts():
-    owner = User.query.filter_by(username=session['username']).first()
+    users = User.query.all()
+    user_id = request.args.get('id')
+    owner = User.query.get(user_id)
     blogs = Blog.query.filter_by(owner=owner).all()
-    return render_template('myposts.html', title="Show All Posts", blogs=blogs)
+    return render_template('userposts.html', title = 'View user posts', blogs=blogs)
+
+
+    
 
 
 
