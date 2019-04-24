@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<h1 class="page-heading">Users</h1>
+<h1 class="page-heading">Blogz</h1>
+<h3>Users</h3>
 </br>
     
     {% if users|length == 0 %}
@@ -11,11 +12,11 @@
 
         
     {% for user in users %}
-        <a class="user-link" href="/?id={{user.id}}"><h2 class="user-username">{{user.username}}</h2></a>
+        <a class="user-link" href="/?id={{user.id}}"><h4 class="user-username">{{user.username}}</h4></a>
            
                 
-                <br />
-                <br />
+                
+               
                 <hr/>  
                   
     {% endfor %}
