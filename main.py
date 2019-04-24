@@ -158,7 +158,7 @@ def logout():
 @app.route('/blog', methods=['POST', 'GET'])
 def show_all_posts():
     blog_id = request.args.get('id')
-    blogs = Blog.query.all()
+    #blogs = Blog.query.all()
     user_id = request.args.get('owner_id')
 
     #####
@@ -174,7 +174,7 @@ def show_all_posts():
         return render_template('blog.html', title="Show Individual Post", blogs=blogs)
 
     else:
-        blogs = Blog.query.all()
+        blogs = Blog.query.order_by(Blog.pub_date.desc())
         return render_template('blog.html', title="Show All Posts", blogs=blogs)
         
         
