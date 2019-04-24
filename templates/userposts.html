@@ -9,7 +9,7 @@
         
     {% for blog in blogs %}
         <a class="title-link" href="/blog?id={{blog.id}}"><h2 class="blog-title">{{blog.title}}</h2></a>
-        <h4 class="username">By: <a class="user-link" href="/blog?owner_id={{blog.owner}}">{{blog.owner}}</a> </h4>
+        <h4 class="username">By: {{blog.owner}} </h4>
             <p class="body">{{blog.body}}</p>  
                
                 <br />
