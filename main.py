@@ -58,8 +58,7 @@ def not_empty(input):
 #check for to see if they are logged in
 def require_login():
     #create list of pages OK to view without being logeed in.
-    allowed_routes = ['login', 'signup', 'index', 'show_all_posts']
-    #if there is not a username key in session dict (not logged in),
+    allowed_routes = ['login', 'signup', 'index', 'show_all_posts', 'static']
     # then redirect to login
     #enpoint is given path
     #square brackets ??

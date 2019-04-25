@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1 class="page-heading">Blogz</h1>
+</br>
 <h3>Users</h3>
 </br>
     
@@ -12,12 +13,13 @@
 
         
     {% for user in users %}
-        <a class="user-link" href="/?id={{user.id}}"><h4 class="user-username">{{user.username}}</h4></a>
+        <a class="user-link" href="/?id={{user.id}}"><h2 class="user-username">{{user.username}}</h2></a>
            
                 
                 
                
-                <hr/>  
+        <br /> 
+        <br />
                   
     {% endfor %}
 

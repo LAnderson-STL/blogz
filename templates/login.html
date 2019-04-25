@@ -2,24 +2,28 @@
 
 {% block content %}
 <h1 class="page-heading">Blogz</h1>
+</br>
 <h3>Login</h3>
 </br>
 <p>If you don't have an account, you may <a href="/register">register</a> for one</p>
 <form action="/login" method="post">
     <table>
         <tr>
-            <td><label for="username">Username</label></td>
+            <td><label for="username">Username &nbsp;</label></td>
             <td>
                 <input name="username" type="text" value="{{ username }}">
             </td>
         </tr>
+    
         <tr>
-            <td><label for="password">Password</label></td>
+            <td><label for="password">Password &nbsp;</label></td>
+        
             <td>
                 <input name="password" type="password">
             </td>
         </tr>
     </table>
-    <input type="submit" value="Login">
+</br>
+    <input class="button" type="submit" value="Login">
 </form>
 {% endblock %}
