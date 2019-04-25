@@ -17,14 +17,15 @@ html{
 body {
     background-image: url("/static/images/bulbs.jpg");
     background-repeat: no-repeat;
+    background-color: black;
 
 }
 
-/*
-h1, h2, h3, h4, p, label {
+
+h1, p, h3, .field {
     color: antiquewhite;
 }
-*/
+
 
 h3 {
     font-size: 2rem;
@@ -42,6 +43,13 @@ input {
     font-size: .8rem;
 }
 
+.logged-in {
+    list-style-type: none;
+    color: antiquewhite;
+}
 
+.username {
+    color:antiquewhite;
+}
 
 

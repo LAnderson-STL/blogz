@@ -100,7 +100,7 @@ def login():
             session['username'] = username
             #flash messages use session object to store message for 
             #next time user comes back
-            flash('Logged in')
+            flash('Loin successful!', 'logged-in')
             return redirect('/')
         else:
             ##### needs work
@@ -114,7 +114,7 @@ def login():
             elif user and user.password != password:
                flash('Incorrect password', 'error')
             elif username not in users:
-                flash('Username does not exist', 'errpr')
+                flash('Username does not exist', 'error')
                 return redirect('/signup')
     return render_template('login.html')
 
